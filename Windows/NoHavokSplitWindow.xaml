@@ -1,0 +1,71 @@
+<ctrl:FrostyDockableWindow x:Class="NoHavokSplitPlugin.Windows.NoHavokSplitWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ctrl="clr-namespace:Frosty.Controls;assembly=FrostyControls"
+        Title="Split StaticModelGroups"
+        Width="560"
+        Height="640"
+        MinWidth="440"
+        MinHeight="400"
+        ResizeMode="CanResize"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        FrostyLoaded="FrostyDockableWindow_FrostyLoaded">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/FrostyControls;component/Themes/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid Background="{StaticResource ControlBackground}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="38" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Margin="10,10,10,4" TextWrapping="Wrap" Foreground="{StaticResource FontColor}"
+                   Text="选择要拆解的地图。只会处理这些地图目录下的 SubWorldData，把 StaticModelGroup 拆进已有 WorldPart。" />
+
+        <DockPanel Grid.Row="1" Margin="10,4,10,4">
+            <TextBlock Text="过滤" VerticalAlignment="Center" Margin="0,0,8,0" Foreground="{StaticResource FontColor}" />
+            <TextBox x:Name="filterTextBox" Height="22" Padding="4,0" VerticalContentAlignment="Center"
+                     TextChanged="FilterTextBox_TextChanged" />
+        </DockPanel>
+
+        <ListBox x:Name="mapListBox" Grid.Row="2" Margin="10,0,10,6"
+                 Background="{StaticResource ListBackground}"
+                 BorderThickness="1"
+                 SelectionMode="Extended">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                              Content="{Binding ListText}"
+                              Margin="2"
+                              Checked="MapCheck_Changed"
+                              Unchecked="MapCheck_Changed"
+                              Foreground="{StaticResource FontColor}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <DockPanel Grid.Row="3" Margin="10,0,10,4">
+            <Button Content="全选" Width="72" Margin="0,0,6,0" Click="SelectAll_Click" />
+            <Button Content="全不选" Width="72" Click="SelectNone_Click" />
+            <TextBlock x:Name="statusText" DockPanel.Dock="Right" HorizontalAlignment="Right"
+                       VerticalAlignment="Center" Foreground="{StaticResource FontColor}" />
+        </DockPanel>
+
+        <Border Grid.Row="4">
+            <Grid Margin="10,4,10,8">
+                <Button Content="取消" Width="80" HorizontalAlignment="Left" Click="Cancel_Click" />
+                <Button Content="拆解所选地图" Width="140" HorizontalAlignment="Right" Click="Split_Click" />
+            </Grid>
+        </Border>
+    </Grid>
+</ctrl:FrostyDockableWindow>
