@@ -42,25 +42,13 @@ namespace NoHavokSplitPlugin
                 return "";
 
             string[] parts = assetName.Replace('\\', '/').Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-            int levelsIdx = -1;
             for (int i = 0; i < parts.Length; i++)
             {
-                if (string.Equals(parts[i], "Levels", StringComparison.OrdinalIgnoreCase))
-                {
-                    levelsIdx = i;
-                    break;
-                }
+                if (IsMapFolderName(parts[i]))
+                    return string.Join("/", parts, 0, i + 1);
             }
 
-            if (levelsIdx < 0)
-            {
-                if (parts.Length >= 2)
-                    return parts[0] + "/" + parts[1];
-                return parts.Length > 0 ? parts[0] : assetName;
-            }
-
-            int last = Math.Min(parts.Length - 1, levelsIdx + 2);
-            return string.Join("/", parts, 0, last + 1);
+            return "";
         }
 
         public static string GetDisplayName(string mapKey)
@@ -84,16 +72,7 @@ namespace NoHavokSplitPlugin
                 return false;
 
             string[] parts = mapKey.Replace('\\', '/').Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-            if (parts.Length < 2)
-                return false;
-
-            string folder = parts[parts.Length - 2];
-            string map = parts[parts.Length - 1];
-            if (!string.Equals(folder, "MP", StringComparison.OrdinalIgnoreCase) &&
-                !string.Equals(folder, "SP", StringComparison.OrdinalIgnoreCase))
-                return false;
-
-            return IsMapFolderName(map);
+            return parts.Length > 0 && IsMapFolderName(parts[parts.Length - 1]);
         }
 
         static bool IsMapFolderName(string name)
